@@ -8,7 +8,7 @@ reset:
 	stty --file=/dev/ttyACM0 -hupcl 
 
 %.elf: %.c
-	/usr/bin/avr-gcc -mmcu=atmega328p -I/usr/lib/avr/include -lm -Wl,--gc-sections -Os -o $@ $<
+	/usr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000 -I/usr/lib/avr/include -lm -Wl,--gc-sections -Os -o $@ $<
 
 blink.hex: blink.elf
 	avr-objcopy -O ihex -R .eeprom $< $@
