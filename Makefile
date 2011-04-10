@@ -1,18 +1,15 @@
 object=blink
 
-all: upload
+all: $(object).upload
 
-reset:
-	stty --file=/dev/ttyACM0  hupcl
-	sleep 0.1
-	stty --file=/dev/ttyACM0 -hupcl 
 
 %.elf: %.c
 	/usr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000 -I/usr/lib/avr/include -lm -Wl,--gc-sections -Os -o $@ $<
 
-blink.hex: blink.elf
+%.hex: %.elf
 	avr-objcopy -O ihex -R .eeprom $< $@
 
-upload: $(object).hex reset
-	/usr/bin/avrdude -q -V -p atmega328p -C /etc/avrdude.conf -c arduino -b 115200 -P /dev/ttyACM0  -U flash:w:$<:i
+%.upload: %.hex
+	stty -F /dev/ttyACM0 hupcl && sleep 0.01 && stty -F /dev/ttyACM0 -hupcl
+	/usr/bin/avrdude -qqV -p atmega328p -c arduino -b 115200 -P /dev/ttyACM0  -U flash:w:$<:i
 
