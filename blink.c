@@ -4,7 +4,7 @@
 
 void delay(uint8_t length) {
 	while (--length) {
-		_delay_loop_2(6000);
+		_delay_loop_2(300);
 	}
 }
 
@@ -65,9 +65,16 @@ adc_read(channel) {
 
 	return (h << 8) | l;
 }
+
+void
+blinky(uint16_t speed) {
+	PORTB ^= 0xff;
+	delay(speed);
+}
  
 int
 main (void) {
+	uint16_t brightness;
 
 	// set all digital pins for output
 	DDRB = 0xff;
@@ -81,8 +88,9 @@ main (void) {
 	adc_init();
 
 	while (1) {
-		// show_10_bits(ADSC);
-		show_10_bits(adc_read(0));
+		// show_10_bits(adc_read(0));
+		brightness = adc_read(0);
+		blinky(brightness);
 	}
 
 	return 1;
