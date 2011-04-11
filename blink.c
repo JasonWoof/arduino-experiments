@@ -33,6 +33,8 @@ show_10_bits(uint16_t bits) {
 	}
 }
 
+// circuit that works is: 5v -> photoresistor -> (wire to A0) -> resistor -> ground
+
 void
 adc_init() {
 	ADMUX=(1<<REFS0); // voltage to Vcc which is hopefully 5v, but maybe requires me to set the reference voltage with wiring?
@@ -79,8 +81,8 @@ main (void) {
 	adc_init();
 
 	while (1) {
-		show_10_bits(ADSC);
-		//show_10_bits(adc_read(0));
+		// show_10_bits(ADSC);
+		show_10_bits(adc_read(0));
 	}
 
 	return 1;
